@@ -375,7 +375,7 @@
             }
         }
 
-        // 6. UI CREATION & REMOVAL (Ultra Vivid Glowing Aurora / Rainbow Sparkle)
+        // 6. UI CREATION & REMOVAL (Ultra Vivid Glowing Aurora & Twinkling Cosmic Stars)
         function injectButtonStyles() {
             if (document.getElementById('mp-downloader-styles')) return;
             const style = document.createElement('style');
@@ -388,41 +388,92 @@
                 }
                 @keyframes mp-neon-pulse {
                     0%, 100% {
-                        box-shadow: 0 0 18px rgba(255, 0, 128, 0.7), 0 0 35px rgba(0, 240, 255, 0.6), 0 0 60px rgba(112, 0, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.6);
+                        box-shadow: 0 0 20px rgba(255, 0, 128, 0.7), 0 0 40px rgba(0, 240, 255, 0.6), 0 0 65px rgba(112, 0, 255, 0.45), inset 0 0 12px rgba(255, 255, 255, 0.7);
                         border-color: rgba(255, 255, 255, 0.95);
                     }
                     50% {
-                        box-shadow: 0 0 28px rgba(255, 110, 0, 0.9), 0 0 55px rgba(255, 0, 128, 0.8), 0 0 90px rgba(0, 240, 255, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.9);
+                        box-shadow: 0 0 30px rgba(255, 110, 0, 0.95), 0 0 60px rgba(255, 0, 128, 0.85), 0 0 95px rgba(0, 240, 255, 0.7), inset 0 0 18px rgba(255, 255, 255, 0.95);
                         border-color: #ffffff;
                     }
                 }
-                @keyframes mp-star-twinkle {
-                    0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
-                    50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
+                @keyframes mp-twinkle {
+                    0%, 100% {
+                        transform: scale(0.6) rotate(0deg);
+                        opacity: 0.2;
+                        filter: drop-shadow(0 0 2px #fff);
+                    }
+                    50% {
+                        transform: scale(1.3) rotate(180deg);
+                        opacity: 1;
+                        filter: drop-shadow(0 0 8px #ffeb3b) drop-shadow(0 0 14px #00e5ff);
+                    }
+                }
+                @keyframes mp-float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-5px); }
                 }
                 @keyframes mp-laser-sweep {
                     0% { left: -120%; }
                     30%, 100% { left: 140%; }
                 }
+                .mp-btn-wrapper {
+                    position: relative !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    animation: mp-float 4s ease-in-out infinite !important;
+                }
+                .mp-star {
+                    position: absolute !important;
+                    pointer-events: none !important;
+                    user-select: none !important;
+                    z-index: 2147483648 !important;
+                    font-size: 16px !important;
+                }
+                .mp-star-1 {
+                    top: -12px !important;
+                    left: 12px !important;
+                    animation: mp-twinkle 2.2s infinite ease-in-out !important;
+                }
+                .mp-star-2 {
+                    bottom: -10px !important;
+                    right: 22px !important;
+                    font-size: 14px !important;
+                    animation: mp-twinkle 2.8s infinite ease-in-out 0.8s !important;
+                }
+                .mp-star-3 {
+                    top: -8px !important;
+                    right: 8px !important;
+                    font-size: 18px !important;
+                    animation: mp-twinkle 3s infinite ease-in-out 1.4s !important;
+                }
+                .mp-star-4 {
+                    bottom: -8px !important;
+                    left: 28px !important;
+                    font-size: 13px !important;
+                    animation: mp-twinkle 2.5s infinite ease-in-out 0.4s !important;
+                }
                 .mp-sparkle-btn {
                     position: relative !important;
                     overflow: hidden !important;
-                    padding: 14px 30px !important;
+                    padding: 14px 32px !important;
                     background: linear-gradient(270deg, #ff007f, #7928ca, #0070f3, #00dfd8, #7928ca, #ff007f) !important;
                     background-size: 300% 300% !important;
                     color: #ffffff !important;
-                    border: 2.5px solid rgba(255, 255, 255, 0.9) !important;
+                    border: 2.5px solid rgba(255, 255, 255, 0.95) !important;
                     border-radius: 50px !important;
                     cursor: pointer !important;
                     font-weight: 900 !important;
                     font-size: 15px !important;
                     letter-spacing: 0.5px !important;
-                    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.8) !important;
+                    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.9) !important;
                     animation: mp-gradient-flow 3.5s ease infinite, mp-neon-pulse 2s infinite ease-in-out !important;
                     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
                     outline: none !important;
                     user-select: none !important;
-                    display: block !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 6px !important;
                     backdrop-filter: blur(8px) !important;
                 }
                 .mp-sparkle-btn::before {
@@ -435,7 +486,7 @@
                     background: linear-gradient(
                         90deg,
                         transparent,
-                        rgba(255, 255, 255, 0.9),
+                        rgba(255, 255, 255, 0.95),
                         transparent
                     ) !important;
                     transform: skewX(-25deg) !important;
@@ -444,7 +495,7 @@
                 }
                 .mp-sparkle-btn:hover {
                     transform: scale(1.08) translateY(-3px) !important;
-                    filter: brightness(1.2) !important;
+                    filter: brightness(1.25) !important;
                 }
                 .mp-sparkle-btn:active {
                     transform: scale(0.96) translateY(0) !important;
@@ -481,18 +532,44 @@
                 bottom: 24px !important;
                 right: 24px !important;
                 z-index: 2147483647 !important;
-                font-family: system-ui, -apple-system, sans-serif !important;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
                 display: flex !important;
                 align-items: center !important;
                 pointer-events: auto !important;
             `;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mp-btn-wrapper';
+
+            // Thêm các ngôi sao lấp lánh xung quanh nút
+            const star1 = document.createElement('span');
+            star1.className = 'mp-star mp-star-1';
+            star1.textContent = '✨';
+
+            const star2 = document.createElement('span');
+            star2.className = 'mp-star mp-star-2';
+            star2.textContent = '⭐';
+
+            const star3 = document.createElement('span');
+            star3.className = 'mp-star mp-star-3';
+            star3.textContent = '🌟';
+
+            const star4 = document.createElement('span');
+            star4.className = 'mp-star mp-star-4';
+            star4.textContent = '✨';
 
             const button = document.createElement('button');
             button.id = 'mp-download-btn';
             button.className = 'mp-sparkle-btn';
             button.onclick = handleDownloadFlow;
 
-            container.appendChild(button);
+            wrapper.appendChild(star1);
+            wrapper.appendChild(star2);
+            wrapper.appendChild(star3);
+            wrapper.appendChild(star4);
+            wrapper.appendChild(button);
+
+            container.appendChild(wrapper);
             targetParent.appendChild(container);
 
             state.ui.container = container;
@@ -517,10 +594,10 @@
 
             if (collectedCount > 0) {
                 const pageInfo = expectedCount > 0 ? `${collectedCount}/${expectedCount}` : `${collectedCount}`;
-                state.ui.button.innerText = `[${CONFIG.VERSION}] ✨ Download Chapter (${pageInfo} pages - ZIP)`;
+                state.ui.button.innerText = `[${CONFIG.VERSION}] 🚀 Download Chapter (${pageInfo} pages - ZIP)`;
             } else {
                 const expectedInfo = expectedCount > 0 ? ` (${expectedCount} pages)` : '';
-                state.ui.button.innerText = `[${CONFIG.VERSION}] ✨ Download Chapter${expectedInfo} (ZIP)`;
+                state.ui.button.innerText = `[${CONFIG.VERSION}] 🚀 Download Chapter${expectedInfo} (ZIP)`;
             }
         }
 
