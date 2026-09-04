@@ -140,17 +140,35 @@
 
         function extractPageNumber(url) {
             if (!url) return null;
-            let m = url.match(/\/manga_page\/(?:high|super_high|mid|low|raw)?\/(\d+)\.jpg/);
-            if (m) return parseInt(m[1], 10);
 
-            m = url.match(/\/chapter\/\d+\/(?:manga_page|page)?\/?(\d+)\.jpg/);
-            if (m) return parseInt(m[1], 10);
+            // Pattern 1: /manga_page/.../0.jpg, /1.jpg
+            let m = url.match(/\/manga_page\/(?:high|super_high|mid|low|raw)?\/(\d+)\.jpg/i);
+            if (m) {
+                const num = parseInt(m[1], 10);
+                if (num >= 0 && num < 500) return num;
+            }
 
-            m = url.match(/\/(\d+)\.jpg(?:\?|$)/);
+            // Pattern 2: /chapter/.../page/0.jpg
+            m = url.match(/\/chapter\/\d+\/(?:manga_page|page)\/(\d+)\.jpg/i);
+            if (m) {
+                const num = parseInt(m[1], 10);
+                if (num >= 0 && num < 500) return num;
+            }
+
+            // Pattern 3: /page/0.jpg or /p/0.jpg
+            m = url.match(/\/(?:page|p)\/(\d+)\.jpg/i);
+            if (m) {
+                const num = parseInt(m[1], 10);
+                if (num >= 0 && num < 500) return num;
+            }
+
+            // Pattern 4: Tên file dạng số nhỏ kết thúc bằng .jpg (ví dụ /001.jpg, /15.jpg) nhưng KHÔNG phải ID dài như /11990588.jpg
+            m = url.match(/\/0*([1-9]\d{0,2})\.jpg(?:\?|$)/i);
             if (m) {
                 const num = parseInt(m[1], 10);
                 if (num > 0 && num < 300) return num;
             }
+
             return null;
         }
 
@@ -210,11 +228,14 @@
 
             while ((match = urlPattern.exec(latin1String)) !== null) {
                 const url = match[1];
-                if (url.includes('banner') || url.includes('thumbnail') || url.includes('icon')) continue;
+                // Loại bỏ tuyệt đối các banner quảng cáo, thumbnail truyện, icon, avatar
+                if (url.includes('banner') || url.includes('thumbnail') || url.includes('icon') || url.includes('title_avatar')) continue;
+                // Chỉ nhận các url thực sự là manga_page hoặc page của viewer
+                if (!url.includes('manga_page') && !url.includes('/chapter/') && !url.includes('/page/')) continue;
 
                 pageCount++;
                 const pageNum = extractPageNumber(url) || pageCount;
-                if (pageNum > maxPageNum) maxPageNum = pageNum;
+                if (pageNum < 300 && pageNum > maxPageNum) maxPageNum = pageNum;
 
                 const lookaheadArea = latin1String.substr(match.index + url.length, 140);
                 const hexMatch = lookaheadArea.match(/([a-f0-9]{32})/);
@@ -223,9 +244,9 @@
                 }
             }
 
-            if (maxPageNum > 0) {
+            if (maxPageNum > 0 && maxPageNum < 300) {
                 state.expectedTotalPages = maxPageNum;
-            } else if (pageCount > 0) {
+            } else if (pageCount > 0 && pageCount < 300) {
                 state.expectedTotalPages = pageCount;
             }
 
