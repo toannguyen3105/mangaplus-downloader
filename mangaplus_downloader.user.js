@@ -354,11 +354,23 @@
             }
         }
 
-        // 6. UI CREATION (Dùng MutationObserver để cắm nút ngay từ ms đầu tiên và luôn gắn chặt)
+        // 6. UI CREATION & REMOVAL
         function ensureUIExists() {
-            // Chỉ hiển thị trên trang viewer
-            if (!window.location.href.includes('/viewer/')) return;
-            if (document.getElementById('mp-downloader-root')) return;
+            const isViewerPage = window.location.href.includes('/viewer/');
+            const existingRoot = document.getElementById('mp-downloader-root');
+
+            // Nếu KHÔNG PHẢI trang đọc truyện (/viewer/), lập tức xóa nút đi nếu đang tồn tại
+            if (!isViewerPage) {
+                if (existingRoot) {
+                    existingRoot.remove();
+                    state.ui.container = null;
+                    state.ui.button = null;
+                }
+                return;
+            }
+
+            // Đang ở trang viewer: Nếu đã có nút thì không tạo lại
+            if (existingRoot) return;
 
             const targetParent = document.body || document.documentElement;
             if (!targetParent) return;
@@ -432,7 +444,7 @@
             }
         }
 
-        // Lắng nghe liên tục DOM mutation để nút xuất hiện NGAY LẬP TỨC từ frame đầu tiên
+        // Lắng nghe liên tục DOM mutation để nút xuất hiện/biến mất linh hoạt theo từng trang
         const observer = new MutationObserver(() => {
             ensureUIExists();
         });
