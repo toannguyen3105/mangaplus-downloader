@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         MangaPlus Chapter Downloader & Decryptor
-// @namespace    https://github.com/
-// @version      22.0
-// @description  Tự động nạp, giải mã XOR và tải trọn bộ chương truyện MangaPlus (Auto trigger qua sessionStorage an toàn không bị router redirect)
-// @author       Antigravity
-// @match        https://mangaplus.shueisha.co.jp/viewer/*
+// @namespace    https://github.com/toannguyen3105/mangaplus-downloader
+// @version      23.0
+// @description  Tự động nạp, giải mã XOR và tải trọn bộ chương truyện MangaPlus (Đảm bảo nút luôn xuất hiện ngay lập tức lần đầu vào trang qua MutationObserver)
+// @author       toannh8
+// @match        https://mangaplus.shueisha.co.jp/*
 // @run-at       document-start
 // @grant        none
 // ==/UserScript==
@@ -14,7 +14,7 @@
 
     const inpageApp = function () {
         const CONFIG = {
-            VERSION: 'v22.0',
+            VERSION: 'v23.0',
             SCROLL_INTERVAL_MS: 70,
             SCROLL_STEP_PX: 450,
             CDN_LIBS: {
@@ -82,7 +82,7 @@
             };
 
             window.addEventListener('popstate', checkUrl);
-            setInterval(checkUrl, 500);
+            setInterval(checkUrl, 400);
         }
 
         // 1. DEPENDENCIES
@@ -231,7 +231,6 @@
 
             updateUI();
 
-            // Nhận diện cờ auto=1
             const isAuto = window.location.search.includes('auto=1') || window.name.includes('auto_runner');
             if (!state.autoTriggered && isAuto) {
                 state.autoTriggered = true;
@@ -355,8 +354,10 @@
             }
         }
 
-        // 6. UI
+        // 6. UI CREATION (Dùng MutationObserver để cắm nút ngay từ ms đầu tiên và luôn gắn chặt)
         function ensureUIExists() {
+            // Chỉ hiển thị trên trang viewer
+            if (!window.location.href.includes('/viewer/')) return;
             if (document.getElementById('mp-downloader-root')) return;
 
             const targetParent = document.body || document.documentElement;
@@ -431,16 +432,18 @@
             }
         }
 
+        // Lắng nghe liên tục DOM mutation để nút xuất hiện NGAY LẬP TỨC từ frame đầu tiên
+        const observer = new MutationObserver(() => {
+            ensureUIExists();
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+
         setupNetworkInterception();
         monitorUrlChanges();
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', ensureUIExists);
-        } else {
-            ensureUIExists();
-        }
+        ensureUIExists();
     };
 
+    // Tiêm script vào DOM
     const scriptElement = document.createElement('script');
     scriptElement.textContent = `(${inpageApp.toString()})();`;
     (document.head || document.documentElement).appendChild(scriptElement);
