@@ -2,7 +2,7 @@
 // @name         MangaPlus Chapter Downloader & Decryptor
 // @namespace    https://github.com/toannguyen3105/mangaplus-downloader
 // @version      23.0
-// @description  Tự động nạp, giải mã XOR và tải trọn bộ chương truyện MangaPlus (Đảm bảo nút luôn xuất hiện ngay lập tức lần đầu vào trang qua MutationObserver)
+// @description  Automated loader, XOR descrambler and batch ZIP exporter for MangaPlus chapters (Instant UI mount with cosmic animated aesthetics)
 // @author       toannh8
 // @match        https://mangaplus.shueisha.co.jp/*
 // @run-at       document-start
@@ -112,7 +112,7 @@
                 .trim();
         }
 
-        // 2. IMAGE DECRYPTION
+        // 2. IMAGE DECRYPTION & DESCRAMBLING (XOR)
         function decryptMangaPage(rawBytes, hexKey) {
             if (rawBytes.length >= 3 && rawBytes[0] === 0xFF && rawBytes[1] === 0xD8 && rawBytes[2] === 0xFF) {
                 return rawBytes;
@@ -162,7 +162,7 @@
                 if (num >= 0 && num < 500) return num;
             }
 
-            // Pattern 4: Tên file dạng số nhỏ kết thúc bằng .jpg (ví dụ /001.jpg, /15.jpg) nhưng KHÔNG phải ID dài như /11990588.jpg
+            // Pattern 4: Short numeric filenames (e.g. /001.jpg, /15.jpg) excluding large arbitrary IDs
             m = url.match(/\/0*([1-9]\d{0,2})\.jpg(?:\?|$)/i);
             if (m) {
                 const num = parseInt(m[1], 10);
@@ -228,9 +228,9 @@
 
             while ((match = urlPattern.exec(latin1String)) !== null) {
                 const url = match[1];
-                // Loại bỏ tuyệt đối các banner quảng cáo, thumbnail truyện, icon, avatar
+                // Strictly exclude banners, thumbnails, icons, and avatars
                 if (url.includes('banner') || url.includes('thumbnail') || url.includes('icon') || url.includes('title_avatar')) continue;
-                // Chỉ nhận các url thực sự là manga_page hoặc page của viewer
+                // Only accept valid chapter manga pages
                 if (!url.includes('manga_page') && !url.includes('/chapter/') && !url.includes('/page/')) continue;
 
                 pageCount++;
@@ -541,7 +541,7 @@
             const wrapper = document.createElement('div');
             wrapper.className = 'mp-btn-wrapper';
 
-            // Thêm các ngôi sao lấp lánh xung quanh nút
+            // Add floating cosmic stars around button
             const star1 = document.createElement('span');
             star1.className = 'mp-star mp-star-1';
             star1.textContent = '✨';
@@ -601,7 +601,7 @@
             }
         }
 
-        // Lắng nghe liên tục DOM mutation để nút xuất hiện/biến mất linh hoạt theo từng trang
+        // Continously observe DOM mutations to mount/unmount widget immediately across SPA routes
         const observer = new MutationObserver(() => {
             ensureUIExists();
         });
@@ -612,7 +612,7 @@
         ensureUIExists();
     };
 
-    // Tiêm script vào DOM
+    // Inject inpageApp script into DOM context
     const scriptElement = document.createElement('script');
     scriptElement.textContent = `(${inpageApp.toString()})();`;
     (document.head || document.documentElement).appendChild(scriptElement);
