@@ -62,7 +62,7 @@ flowchart TD
    - Press **File → Save** (`Ctrl + S`).
 3. **Download**:
    - Open any chapter on MangaPlus (e.g., [One Piece Chapter 1](https://mangaplus.shueisha.co.jp/viewer/1000486)).
-   - Click the green button at the bottom right: **`[v22.0] 📥 Tải trọn bộ (... trang - ZIP)`**.
+   - Click the glowing aurora button at the bottom right: **`[v23.0] 🚀 Download Chapter (... pages - ZIP)`**.
    - The script will harvest, descramble, and download the full ZIP file automatically.
 
 ---

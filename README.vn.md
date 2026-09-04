@@ -65,7 +65,7 @@ flowchart TD
 
 #### Bước 3: Tải truyện
 - Truy cập vào bất kỳ chương truyện nào trên MangaPlus (Ví dụ: [One Piece Chapter 1191](https://mangaplus.shueisha.co.jp/viewer/1029978)).
-- Nút bấm **`[v22.0] 📥 Tải trọn bộ (... trang - ZIP)`** sẽ xuất hiện ở góc dưới bên phải màn hình.
+- Nút bấm lấp lánh **`[v23.0] 🚀 Download Chapter (... pages - ZIP)`** sẽ xuất hiện ở góc dưới bên phải màn hình.
 - Bấm vào nút → Trình duyệt tự nạp, giải mã và tải ngay file `.zip` hoàn chỉnh về máy!
 
 ---
