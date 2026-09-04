@@ -375,70 +375,79 @@
             }
         }
 
-        // 6. UI CREATION & REMOVAL
+        // 6. UI CREATION & REMOVAL (Ultra Vivid Glowing Aurora / Rainbow Sparkle)
         function injectButtonStyles() {
             if (document.getElementById('mp-downloader-styles')) return;
             const style = document.createElement('style');
             style.id = 'mp-downloader-styles';
             style.textContent = `
-                @keyframes mp-shimmer {
-                    0% { background-position: -200% 0; }
-                    100% { background-position: 200% 0; }
+                @keyframes mp-gradient-flow {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
                 }
-                @keyframes mp-pulse-glow {
+                @keyframes mp-neon-pulse {
                     0%, 100% {
-                        box-shadow: 0 0 15px rgba(0, 230, 118, 0.45), 0 0 30px rgba(0, 230, 118, 0.2), 0 4px 20px rgba(0, 0, 0, 0.5);
+                        box-shadow: 0 0 18px rgba(255, 0, 128, 0.7), 0 0 35px rgba(0, 240, 255, 0.6), 0 0 60px rgba(112, 0, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.6);
+                        border-color: rgba(255, 255, 255, 0.95);
                     }
                     50% {
-                        box-shadow: 0 0 25px rgba(0, 230, 118, 0.8), 0 0 50px rgba(0, 230, 118, 0.4), 0 6px 25px rgba(0, 0, 0, 0.6);
+                        box-shadow: 0 0 28px rgba(255, 110, 0, 0.9), 0 0 55px rgba(255, 0, 128, 0.8), 0 0 90px rgba(0, 240, 255, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.9);
+                        border-color: #ffffff;
                     }
+                }
+                @keyframes mp-star-twinkle {
+                    0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
+                    50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
+                }
+                @keyframes mp-laser-sweep {
+                    0% { left: -120%; }
+                    30%, 100% { left: 140%; }
                 }
                 .mp-sparkle-btn {
                     position: relative !important;
                     overflow: hidden !important;
-                    padding: 13px 28px !important;
-                    background: linear-gradient(135deg, #00c853 0%, #00e676 25%, #b9f6ca 50%, #00e676 75%, #00c853 100%) !important;
-                    background-size: 250% 100% !important;
-                    color: #0b2b11 !important;
-                    border: 2px solid rgba(255, 255, 255, 0.85) !important;
+                    padding: 14px 30px !important;
+                    background: linear-gradient(270deg, #ff007f, #7928ca, #0070f3, #00dfd8, #7928ca, #ff007f) !important;
+                    background-size: 300% 300% !important;
+                    color: #ffffff !important;
+                    border: 2.5px solid rgba(255, 255, 255, 0.9) !important;
                     border-radius: 50px !important;
                     cursor: pointer !important;
-                    font-weight: 800 !important;
-                    font-size: 14px !important;
-                    letter-spacing: 0.3px !important;
-                    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6) !important;
-                    animation: mp-shimmer 3.5s infinite linear, mp-pulse-glow 2.5s infinite ease-in-out !important;
-                    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+                    font-weight: 900 !important;
+                    font-size: 15px !important;
+                    letter-spacing: 0.5px !important;
+                    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.8) !important;
+                    animation: mp-gradient-flow 3.5s ease infinite, mp-neon-pulse 2s infinite ease-in-out !important;
+                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
                     outline: none !important;
                     user-select: none !important;
                     display: block !important;
+                    backdrop-filter: blur(8px) !important;
                 }
                 .mp-sparkle-btn::before {
                     content: '' !important;
                     position: absolute !important;
-                    top: -50% !important;
-                    left: -50% !important;
-                    width: 200% !important;
-                    height: 200% !important;
+                    top: 0 !important;
+                    left: -120% !important;
+                    width: 60% !important;
+                    height: 100% !important;
                     background: linear-gradient(
-                        60deg,
-                        transparent 30%,
-                        rgba(255, 255, 255, 0.6) 50%,
-                        transparent 70%
+                        90deg,
+                        transparent,
+                        rgba(255, 255, 255, 0.9),
+                        transparent
                     ) !important;
-                    transform: rotate(25deg) translateX(-100%) !important;
-                    animation: mp-shine 4s infinite ease-in-out !important;
+                    transform: skewX(-25deg) !important;
+                    animation: mp-laser-sweep 3s infinite ease-in-out !important;
                     pointer-events: none !important;
                 }
-                @keyframes mp-shine {
-                    0%, 20% { transform: rotate(25deg) translateX(-150%); }
-                    40%, 100% { transform: rotate(25deg) translateX(150%); }
-                }
                 .mp-sparkle-btn:hover {
-                    transform: scale(1.06) translateY(-2px) !important;
+                    transform: scale(1.08) translateY(-3px) !important;
+                    filter: brightness(1.2) !important;
                 }
                 .mp-sparkle-btn:active {
-                    transform: scale(0.97) translateY(0) !important;
+                    transform: scale(0.96) translateY(0) !important;
                 }
             `;
             (document.head || document.documentElement).appendChild(style);
