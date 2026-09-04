@@ -284,7 +284,7 @@
             while (true) {
                 iteration++;
                 const expected = state.expectedTotalPages > 0 ? `/${state.expectedTotalPages}` : '';
-                updateUI(`[${CONFIG.VERSION}] 🔄 Đang nạp: ${state.images.size}${expected} trang...`);
+                updateUI(`[${CONFIG.VERSION}] 🔄 Loading: ${state.images.size}${expected} pages...`);
 
                 scrollTargets.forEach((target) => {
                     try {
@@ -334,13 +334,13 @@
 
                 const totalPages = state.images.size;
                 if (totalPages === 0) {
-                    alert(`[${CONFIG.VERSION}] Chưa thu thập được trang nào. Hãy thử F5 tải lại trang!`);
+                    alert(`[${CONFIG.VERSION}] No pages collected yet. Please reload the page!`);
                     state.isProcessing = false;
                     updateUI();
                     return;
                 }
 
-                updateUI(`[${CONFIG.VERSION}] 📦 Đang nén file ZIP (${totalPages} trang)...`);
+                updateUI(`[${CONFIG.VERSION}] 📦 Packaging ZIP (${totalPages} pages)...`);
 
                 const chapterTitle = sanitizeFilename(document.title);
                 const zip = new window.JSZip();
@@ -361,15 +361,15 @@
                 window.saveAs(zipBlob, `${chapterTitle}.zip`);
 
                 state.isCompleted = true;
-                updateUI(`[${CONFIG.VERSION}] ✓ Đã tải xong ${totalPages} trang!`);
+                updateUI(`[${CONFIG.VERSION}] ✓ Downloaded ${totalPages} pages!`);
 
                 setTimeout(() => {
                     state.isProcessing = false;
                     updateUI();
                 }, 4000);
             } catch (err) {
-                console.error('[MangaPlus] Lỗi tải file:', err);
-                alert(`[${CONFIG.VERSION}] Có lỗi xảy ra khi tải. Chi tiết tại Console F12.`);
+                console.error('[MangaPlus] Download error:', err);
+                alert(`[${CONFIG.VERSION}] An error occurred while downloading. Check F12 Console for details.`);
                 state.isProcessing = false;
                 updateUI();
             }
@@ -380,7 +380,7 @@
             const isViewerPage = window.location.href.includes('/viewer/');
             const existingRoot = document.getElementById('mp-downloader-root');
 
-            // Nếu KHÔNG PHẢI trang đọc truyện (/viewer/), lập tức xóa nút đi nếu đang tồn tại
+            // Remove button immediately if not on a reader/viewer page
             if (!isViewerPage) {
                 if (existingRoot) {
                     existingRoot.remove();
@@ -390,7 +390,6 @@
                 return;
             }
 
-            // Đang ở trang viewer: Nếu đã có nút thì không tạo lại
             if (existingRoot) return;
 
             const targetParent = document.body || document.documentElement;
@@ -456,11 +455,11 @@
 
             if (collectedCount > 0) {
                 const pageInfo = expectedCount > 0 ? `${collectedCount}/${expectedCount}` : `${collectedCount}`;
-                state.ui.button.innerText = `[${CONFIG.VERSION}] 📥 Tải trọn bộ (${pageInfo} trang - ZIP)`;
+                state.ui.button.innerText = `[${CONFIG.VERSION}] 📥 Download Chapter (${pageInfo} pages - ZIP)`;
                 state.ui.button.style.backgroundColor = '#1b5e20';
             } else {
-                const expectedInfo = expectedCount > 0 ? ` (${expectedCount} trang)` : '';
-                state.ui.button.innerText = `[${CONFIG.VERSION}] 📥 Tải trọn bộ chương MangaPlus${expectedInfo} (ZIP)`;
+                const expectedInfo = expectedCount > 0 ? ` (${expectedCount} pages)` : '';
+                state.ui.button.innerText = `[${CONFIG.VERSION}] 📥 Download Chapter${expectedInfo} (ZIP)`;
                 state.ui.button.style.backgroundColor = '#0288d1';
             }
         }
