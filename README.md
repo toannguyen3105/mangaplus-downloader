@@ -42,11 +42,18 @@
 
 ```mermaid
 flowchart TD
-    A["Open MangaPlus Viewer Page"] --> B["Hook XHR & Intercept Protobuf API"]
-    B --> C["Extract Image URLs + Hex XOR Keys"]
-    C --> D["Auto Dynamic Virtual Scroll (Fetch 100% pages)"]
-    D --> E["Decrypt XOR Byte Array & Validate JPEG Headers"]
-    E --> F["Archive via JSZip -> Export Chapter.zip"]
+    A["Open MangaPlus Viewer"] --> B["DOM Observer mounts Cosmic Download Button"]
+    A --> C["Hook XHR & Intercept Protobuf API"]
+    C --> D["Extract Page Image URLs & 16-Byte XOR Keys"]
+    B -- "Click Button / ?auto=1" --> E["Auto Virtual Scroll (Bypasses React Lazy DOM)"]
+    E --> F["Capture Raw ArrayBuffer Image Streams"]
+    D -. "Feed Keys" .-> G{"Scrambled JPEG Check"}
+    F --> G
+    G -- "Raw Header (FF D8 FF)" --> H["Keep Original Bytes"]
+    G -- "Encrypted Stream" --> I["Apply 16-Byte Hex XOR Decryption"]
+    H --> J["Assemble Decrypted JPEGs in JSZip"]
+    I --> J
+    J --> K["SaveAs Chapter_Title.zip"]
 ```
 
 ---

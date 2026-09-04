@@ -39,14 +39,21 @@
 ---
 
 ## 🏗️ Cách thức hoạt động
-
+ 
 ```mermaid
 flowchart TD
-    A["Mở trang Viewer MangaPlus"] --> B["Hook XHR & Chặn bắt Protobuf API"]
-    B --> C["Trích xuất URL ảnh + Khóa giải mã Hex XOR"]
-    C --> D["Auto Dynamic Virtual Scroll (Buộc nạp đủ 100% trang)"]
-    D --> E["Giải mã XOR mảng byte & Kiểm tra Header JPEG"]
-    E --> F["Đóng gói JSZip -> Xuất file Chapter.zip"]
+    A["Mở trang đọc truyện Viewer"] --> B["MutationObserver tự động gắn Nút Tải"]
+    A --> C["Hook XHR & Chặn bắt Protobuf API"]
+    C --> D["Trích xuất URL ảnh & Khóa giải mã XOR 16-byte"]
+    B -- "Bấm Nút Tải / ?auto=1" --> E["Cuộn trang tự động (Vượt qua Virtual DOM)"]
+    E --> F["Thu thập luồng mảng byte ArrayBuffer"]
+    D -. "Cung cấp khóa" .-> G{"Kiểm tra mã hóa JPEG"}
+    F --> G
+    G -- "Header gốc (FF D8 FF)" --> H["Giữ nguyên dữ liệu ảnh"]
+    G -- "Dữ liệu bị xáo trộn" --> I["Thực hiện giải mã Hex XOR 16-byte"]
+    H --> J["Đóng gói các file ảnh vào JSZip"]
+    I --> J
+    J --> K["Xuất file nén Chapter_Title.zip"]
 ```
 
 ---
