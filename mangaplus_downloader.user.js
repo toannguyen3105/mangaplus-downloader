@@ -376,6 +376,74 @@
         }
 
         // 6. UI CREATION & REMOVAL
+        function injectButtonStyles() {
+            if (document.getElementById('mp-downloader-styles')) return;
+            const style = document.createElement('style');
+            style.id = 'mp-downloader-styles';
+            style.textContent = `
+                @keyframes mp-shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+                @keyframes mp-pulse-glow {
+                    0%, 100% {
+                        box-shadow: 0 0 15px rgba(0, 230, 118, 0.45), 0 0 30px rgba(0, 230, 118, 0.2), 0 4px 20px rgba(0, 0, 0, 0.5);
+                    }
+                    50% {
+                        box-shadow: 0 0 25px rgba(0, 230, 118, 0.8), 0 0 50px rgba(0, 230, 118, 0.4), 0 6px 25px rgba(0, 0, 0, 0.6);
+                    }
+                }
+                .mp-sparkle-btn {
+                    position: relative !important;
+                    overflow: hidden !important;
+                    padding: 13px 28px !important;
+                    background: linear-gradient(135deg, #00c853 0%, #00e676 25%, #b9f6ca 50%, #00e676 75%, #00c853 100%) !important;
+                    background-size: 250% 100% !important;
+                    color: #0b2b11 !important;
+                    border: 2px solid rgba(255, 255, 255, 0.85) !important;
+                    border-radius: 50px !important;
+                    cursor: pointer !important;
+                    font-weight: 800 !important;
+                    font-size: 14px !important;
+                    letter-spacing: 0.3px !important;
+                    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+                    animation: mp-shimmer 3.5s infinite linear, mp-pulse-glow 2.5s infinite ease-in-out !important;
+                    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+                    outline: none !important;
+                    user-select: none !important;
+                    display: block !important;
+                }
+                .mp-sparkle-btn::before {
+                    content: '' !important;
+                    position: absolute !important;
+                    top: -50% !important;
+                    left: -50% !important;
+                    width: 200% !important;
+                    height: 200% !important;
+                    background: linear-gradient(
+                        60deg,
+                        transparent 30%,
+                        rgba(255, 255, 255, 0.6) 50%,
+                        transparent 70%
+                    ) !important;
+                    transform: rotate(25deg) translateX(-100%) !important;
+                    animation: mp-shine 4s infinite ease-in-out !important;
+                    pointer-events: none !important;
+                }
+                @keyframes mp-shine {
+                    0%, 20% { transform: rotate(25deg) translateX(-150%); }
+                    40%, 100% { transform: rotate(25deg) translateX(150%); }
+                }
+                .mp-sparkle-btn:hover {
+                    transform: scale(1.06) translateY(-2px) !important;
+                }
+                .mp-sparkle-btn:active {
+                    transform: scale(0.97) translateY(0) !important;
+                }
+            `;
+            (document.head || document.documentElement).appendChild(style);
+        }
+
         function ensureUIExists() {
             const isViewerPage = window.location.href.includes('/viewer/');
             const existingRoot = document.getElementById('mp-downloader-root');
@@ -391,6 +459,8 @@
             }
 
             if (existingRoot) return;
+
+            injectButtonStyles();
 
             const targetParent = document.body || document.documentElement;
             if (!targetParent) return;
@@ -410,24 +480,7 @@
 
             const button = document.createElement('button');
             button.id = 'mp-download-btn';
-            button.style.cssText = `
-                padding: 13px 26px !important;
-                background-color: #1b5e20 !important;
-                color: #ffffff !important;
-                border: 2px solid #ffffff !important;
-                border-radius: 30px !important;
-                cursor: pointer !important;
-                font-weight: bold !important;
-                font-size: 14px !important;
-                box-shadow: 0 4px 18px rgba(0,0,0,0.45) !important;
-                transition: all 0.25s ease !important;
-                outline: none !important;
-                user-select: none !important;
-                display: block !important;
-            `;
-
-            button.onmouseenter = () => { button.style.transform = 'scale(1.03)'; };
-            button.onmouseleave = () => { button.style.transform = 'scale(1)'; };
+            button.className = 'mp-sparkle-btn';
             button.onclick = handleDownloadFlow;
 
             container.appendChild(button);
@@ -455,12 +508,10 @@
 
             if (collectedCount > 0) {
                 const pageInfo = expectedCount > 0 ? `${collectedCount}/${expectedCount}` : `${collectedCount}`;
-                state.ui.button.innerText = `[${CONFIG.VERSION}] 📥 Download Chapter (${pageInfo} pages - ZIP)`;
-                state.ui.button.style.backgroundColor = '#1b5e20';
+                state.ui.button.innerText = `[${CONFIG.VERSION}] ✨ Download Chapter (${pageInfo} pages - ZIP)`;
             } else {
                 const expectedInfo = expectedCount > 0 ? ` (${expectedCount} pages)` : '';
-                state.ui.button.innerText = `[${CONFIG.VERSION}] 📥 Download Chapter${expectedInfo} (ZIP)`;
-                state.ui.button.style.backgroundColor = '#0288d1';
+                state.ui.button.innerText = `[${CONFIG.VERSION}] ✨ Download Chapter${expectedInfo} (ZIP)`;
             }
         }
 
